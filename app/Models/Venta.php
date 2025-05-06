@@ -6,10 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Venta extends Model
 {
+
     public function cliente() {
         return $this->belongsTo(Cliente::class, 'cliente_id');
     }
 
     protected $fillable = ['cliente_id', 'total'];
+    public $timestamps = false;
+
+    public function detalles()
+{
+    return $this->hasMany(DetalleVenta::class);
+}
+
 
 }
