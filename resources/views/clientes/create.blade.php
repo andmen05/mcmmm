@@ -1,13 +1,20 @@
 @extends('layouts.layout')
 
-@section('content')
-    <h1>Crear Cliente</h1>
-    <form method="POST" action="{{ route('clientes.store') }}">
-        @csrf
-        <input name="nombre" placeholder="Nombre" required>
-        <input name="email" placeholder="Email" required>
-        <input name="telefono" placeholder="Teléfono" required>
-        <button type="submit">Guardar</button>
-    </form>
-@endsection
+<form action="{{ route('clientes.store') }}" method="POST">
+    @csrf
+    <div>
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required>
+    </div>
+    <div>
+        <label>Email:</label>
+        <input type="email" name="email" required>
+    </div>
+    <div>
+        <label>Teléfono:</label>
+        <input type="text" name="telefono" required>
+    </div>
+    <button type="submit">Guardar</button>
+</form>
+
 
