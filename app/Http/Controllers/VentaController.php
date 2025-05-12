@@ -11,47 +11,34 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class VentaController extends Controller
 {
-    // Mostrar todas las ventas
     public function index()
     {
         $ventas = Venta::with('cliente')->get();
         return view('ventas.index', compact('ventas'));
     }
 
-    // Mostrar los detalles de una venta específica
     public function show(Venta $venta)
-
-
     {
-        // Carga la relación 'cliente' y 'detalles.producto' asociados a la venta
         $venta->load('cliente', 'detalles.producto');
-
-        // Devuelve la vista con los detalles de la venta
         return view('ventas.show', compact('venta'));
     }
 
     public function factura(Venta $venta)
-{
-    $venta->load('cliente', 'detalles.producto');
+    {
+        $venta->load('cliente', 'detalles.producto');
+        $pdf = Pdf::loadView('ventas.factura', compact('venta'));
+        return $pdf->download('factura_venta_'.$venta->id.'.pdf');
+    }
 
-    $pdf = Pdf::loadView('ventas.factura', compact('venta'));
-    return $pdf->download('factura_venta_'.$venta->id.'.pdf');
-}
-
-
-    // Mostrar el formulario de creación de una nueva venta
     public function create()
     {
-        // Obtener todos los clientes y productos para el formulario
         $clientes = Cliente::all();
         $productos = Producto::all();
         return view('ventas.create', compact('clientes', 'productos'));
     }
 
-    // Almacenar una nueva venta
     public function store(Request $request)
     {
-        // Validar la entrada del formulario
         $request->validate([
             'cliente_id' => 'required|exists:clientes,id',
             'producto_id' => 'required|array|min:1',
@@ -60,15 +47,25 @@ class VentaController extends Controller
             'precio_unitario.*' => 'required|numeric|min:0',
         ]);
 
-        // Crear la venta
+        // Verificar stock
+        for ($i = 0; $i < count($request->producto_id); $i++) {
+            $productoId = $request->producto_id[$i];
+            $cantidad = $request->cantidad[$i];
+            $producto = Producto::find($productoId);
+
+            if (!$producto || $producto->stock < $cantidad) {
+                return redirect()->back()->withInput()->with('error', "Stock insuficiente para el producto: {$producto->nombre}");
+            }
+        }
+
+        // Crear venta
         $venta = Venta::create([
             'cliente_id' => $request->cliente_id,
-            'total' => 0, // Este valor se actualizará después
+            'total' => 0,
         ]);
 
         $total = 0;
 
-        // Recorrer los productos y calcular el total
         for ($i = 0; $i < count($request->producto_id); $i++) {
             $productoId = $request->producto_id[$i];
             $cantidad = $request->cantidad[$i];
@@ -77,19 +74,21 @@ class VentaController extends Controller
             $subtotal = $cantidad * $precio;
             $total += $subtotal;
 
-            // Crear los detalles de la venta
             DetalleVenta::create([
                 'venta_id' => $venta->id,
                 'producto_id' => $productoId,
                 'cantidad' => $cantidad,
                 'precio_unitario' => $precio,
             ]);
+
+            // Descontar del stock
+            $producto = Producto::find($productoId);
+            $producto->stock -= $cantidad;
+            $producto->save();
         }
 
-        // Actualizar el total de la venta
         $venta->update(['total' => $total]);
 
-        // Redirigir a la vista de ventas con un mensaje de éxito
         return redirect()->route('ventas.index')->with('success', 'Venta registrada correctamente.');
     }
 }

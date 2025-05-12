@@ -4,6 +4,13 @@
 <div class="container mt-5">
     <h2 class="mb-4">Registrar nueva venta</h2>
 
+    {{-- Mostrar mensaje de error de stock --}}
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <form action="{{ route('ventas.store') }}" method="POST">
         @csrf
 
@@ -26,7 +33,9 @@
                     <select name="producto_id[]" class="form-select" required>
                         <option value="" disabled selected>Selecciona un producto</option>
                         @foreach($productos as $producto)
-                            <option value="{{ $producto->id }}">{{ $producto->nombre }} - ${{ number_format($producto->precio, 0, ',', '.') }}</option>
+                            <option value="{{ $producto->id }}">
+                                {{ $producto->nombre }} - ${{ number_format($producto->precio, 0, ',', '.') }} - Stock: {{ $producto->stock }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -59,14 +68,12 @@ document.getElementById('agregar-producto').addEventListener('click', function (
     const firstItem = container.querySelector('.producto-item');
     const newItem = firstItem.cloneNode(true);
 
-    // Limpiar campos
     newItem.querySelectorAll('input').forEach(input => input.value = '');
     newItem.querySelector('select').selectedIndex = 0;
 
     container.appendChild(newItem);
 });
 
-// Eliminar fila de producto
 document.addEventListener('click', function (e) {
     if (e.target && e.target.classList.contains('btn-remove')) {
         const container = document.getElementById('productos-container');
@@ -77,4 +84,3 @@ document.addEventListener('click', function (e) {
 });
 </script>
 @endsection
-

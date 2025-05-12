@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>MCMMM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -54,15 +55,16 @@
         }
     </style>
 </head>
-<!-- resources/views/layouts/layout.blade.php -->
-<head>
-    <!-- ... otros links ... -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Si usas Alpine.js o cualquier otra librería, agrégala aquí -->
-</head>
 <body>
     <div class="container">
-        @yield('content') <!-- Esta línea se usará para incluir el contenido de la vista que extienda este layout -->
+        @yield('content')
     </div>
+
+    {{-- Scripts comunes --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ mix('js/app.js') }}"></script>
+
+    {{-- Scripts de cada vista --}}
+    @yield('scripts')
 </body>
 </html>

@@ -5,6 +5,9 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\EstadisticaController;
+use App\Http\Controllers\CategoriaController;
+
 
 // Página principal (inicio)
 Route::get('/', function () {
@@ -13,6 +16,9 @@ Route::get('/', function () {
 
 // Rutas que requieren autenticación
 Route::middleware('auth')->group(function () {
+Route::get('/estadisticas', [App\Http\Controllers\EstadisticaController::class, 'index'])->name('estadisticas.index');
+Route::get('/estadisticas', [EstadisticaController::class, 'index'])->name('estadisticas.index');
+
 
     // Dashboard (solo accesible por usuarios autenticados)
     Route::get('/dashboard', function () {
@@ -31,6 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::resource('categorias', CategoriaController::class);
 
 // Rutas de autenticación
 require __DIR__.'/auth.php';

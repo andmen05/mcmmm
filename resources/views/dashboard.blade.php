@@ -54,6 +54,8 @@
                     <p class="text-gray-600 dark:text-gray-400 mb-4">Administra los productos disponibles para la venta.</p>
                     <a href="{{ route('productos.index') }}" class="inline-block bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">
                         Ver Productos
+                        <a href="{{ route('estadisticas.index') }}">Estadísticas</a>
+
                     </a>
                 </div>
 
