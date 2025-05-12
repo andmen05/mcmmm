@@ -12,7 +12,7 @@ class Venta extends Model
     }
 
     protected $fillable = ['cliente_id', 'total'];
-    public $timestamps = false;
+
 
     public function detalles()
 {

@@ -1,4 +1,4 @@
-@extends('layouts.layout')<!-- Esto indica que esta vista extiende el layout ubicado en 'resources/views/layouts/layout.blade.php' -->
+@extends('layouts.layout')
 
 @section('content')
 <div class="container mt-5">
@@ -18,34 +18,63 @@
             </select>
         </div>
 
-        {{-- Productos --}}
-        <div id="productos" class="mb-3">
-            <label for="producto_id" class="form-label">Producto</label>
-            <select name="productos[0][producto_id]" id="producto_id" class="form-select" required>
-                <option value="" disabled selected>Selecciona un producto</option>
-                @foreach($productos as $producto)
-                    <option value="{{ $producto->id }}">
-                        {{ $producto->nombre }} - ${{ number_format($producto->precio, 0, ',', '.') }}
-                    </option>
-                @endforeach
-            </select>
+        {{-- Productos dinámicos --}}
+        <div id="productos-container">
+            <div class="producto-item row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">Producto</label>
+                    <select name="producto_id[]" class="form-select" required>
+                        <option value="" disabled selected>Selecciona un producto</option>
+                        @foreach($productos as $producto)
+                            <option value="{{ $producto->id }}">{{ $producto->nombre }} - ${{ number_format($producto->precio, 0, ',', '.') }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Cantidad</label>
+                    <input type="number" name="cantidad[]" class="form-control" min="1" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Precio Unitario</label>
+                    <input type="number" name="precio_unitario[]" class="form-control" step="0.01" required>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger btn-remove">X</button>
+                </div>
+            </div>
         </div>
 
-        {{-- Cantidad --}}
-        <div class="mb-3">
-            <label for="cantidad" class="form-label">Cantidad</label>
-            <input type="number" name="productos[0][cantidad]" id="cantidad" class="form-control" min="1" required>
-        </div>
+        <button type="button" class="btn btn-success mb-3" id="agregar-producto">Agregar otro producto</button>
 
-        {{-- Precio --}}
-        <div class="mb-3">
-            <label for="precio" class="form-label">Precio</label>
-            <input type="number" name="productos[0][precio]" id="precio" class="form-control" step="0.01" required>
-        </div>
-
+        <br>
         <button type="submit" class="btn btn-primary">Registrar Venta</button>
         <a href="{{ route('ventas.index') }}" class="btn btn-secondary ms-2">Cancelar</a>
     </form>
 </div>
+
+{{-- Script para clonar campos --}}
+<script>
+document.getElementById('agregar-producto').addEventListener('click', function () {
+    const container = document.getElementById('productos-container');
+    const firstItem = container.querySelector('.producto-item');
+    const newItem = firstItem.cloneNode(true);
+
+    // Limpiar campos
+    newItem.querySelectorAll('input').forEach(input => input.value = '');
+    newItem.querySelector('select').selectedIndex = 0;
+
+    container.appendChild(newItem);
+});
+
+// Eliminar fila de producto
+document.addEventListener('click', function (e) {
+    if (e.target && e.target.classList.contains('btn-remove')) {
+        const container = document.getElementById('productos-container');
+        if (container.querySelectorAll('.producto-item').length > 1) {
+            e.target.closest('.producto-item').remove();
+        }
+    }
+});
+</script>
 @endsection
 
