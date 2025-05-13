@@ -3,22 +3,21 @@
 @section('content')
     <h1 class="text-2xl font-bold mb-4">Lista de Productos</h1>
 
-    <div class="flex justify-between items-center mb-4">
-        <a href="{{ route('productos.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-            Nuevo Producto
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex gap-2">
+            <a href="{{ route('productos.create') }}" class="btn btn-primary">
+                Nuevo Producto
+            </a>
+            <a href="{{ route('categorias.create') }}" class="btn btn-secondary">
+                Nueva Categoría
+            </a>
+        </div>
 
-            <!-- Botón para Nueva Categoría -->
-        <a href="{{ route('categorias.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-            Nueva Categoría
-
-        </a>
-
-        <form action="{{ route('productos.index') }}" method="GET" class="flex items-center gap-2">
+        <form action="{{ route('productos.index') }}" method="GET" class="d-flex align-items-center gap-2">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por nombre"
-                class="border border-gray-300 rounded px-3 py-1">
+                class="form-control">
 
-            <select name="categoria_id" onchange="this.form.submit()"
-                class="border border-gray-300 rounded px-3 py-1">
+            <select name="categoria_id" onchange="this.form.submit()" class="form-select">
                 <option value="">Todas las categorías</option>
                 @foreach($categorias as $categoria)
                     <option value="{{ $categoria->id }}" {{ request('categoria_id') == $categoria->id ? 'selected' : '' }}>
@@ -27,50 +26,49 @@
                 @endforeach
             </select>
 
-            <button type="submit" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded">
+            <button type="submit" class="btn btn-dark">
                 Buscar
             </button>
         </form>
     </div>
 
     @if (session('success'))
-        <div class="bg-green-200 text-green-800 p-2 mb-4 rounded">
+        <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
 
-    <table class="w-full border-collapse border border-gray-300">
-        <thead class="bg-gray-200">
+    <table class="table table-bordered">
+        <thead class="table-light">
             <tr>
-                <th class="border px-4 py-2">Nombre</th>
-                <th class="border px-4 py-2">Descripción</th>
-                <th class="border px-4 py-2">Precio</th>
-                <th class="border px-4 py-2">Stock</th>
-                <th class="border px-4 py-2">Categoría</th>
-                <th class="border px-4 py-2">Acciones</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Categoría</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             @forelse($productos as $producto)
                 <tr>
-                    <td class="border px-4 py-2">{{ $producto->nombre }}</td>
-                    <td class="border px-4 py-2">{{ $producto->descripcion }}</td>
-                    <td class="border px-4 py-2">${{ number_format($producto->precio, 2) }}</td>
-                    <td class="border px-4 py-2">{{ $producto->stock }}</td>
-                    <td class="border px-4 py-2">{{ $producto->categoria->nombre ?? 'Sin categoría' }}</td>
-                    <td class="border px-4 py-2 flex gap-2">
-                        <a href="{{ route('productos.edit', $producto->id) }}" class="bg-yellow-400 hover:bg-yellow-500 text-white px-2 py-1 rounded">Editar</a>
-
+                    <td>{{ $producto->nombre }}</td>
+                    <td>{{ $producto->descripcion }}</td>
+                    <td>${{ number_format($producto->precio, 2) }}</td>
+                    <td>{{ $producto->stock }}</td>
+                    <td>{{ $producto->categoria->nombre ?? 'Sin categoría' }}</td>
+                    <td class="d-flex gap-2">
+                        <a href="{{ route('productos.edit', $producto->id) }}" class="btn btn-warning btn-sm">Editar</a>
                         <form action="{{ route('productos.destroy', $producto->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">Eliminar</button>
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                         </form>
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="text-center py-4">No se encontraron productos.</td>
+                    <td colspan="6" class="text-center">No se encontraron productos.</td>
                 </tr>
             @endforelse
         </tbody>

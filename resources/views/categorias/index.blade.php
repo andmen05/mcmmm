@@ -3,30 +3,44 @@
 @section('content')
     <h1 class="text-2xl font-bold mb-4">Categorías</h1>
 
-    <a href="{{ route('categorias.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mb-4 inline-block">
-        Nueva Categoría
-    </a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{{ route('categorias.create') }}" class="btn btn-primary">
+            Nueva Categoría
+        </a>
+    </div>
 
     @if (session('success'))
-        <div class="bg-green-200 text-green-800 p-2 mb-4 rounded">
+        <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
 
-    <table class="w-full border-collapse border border-gray-300">
-        <thead class="bg-gray-200">
+    <table class="table table-bordered">
+        <thead class="table-light">
             <tr>
-                <th class="border px-4 py-2">ID</th>
-                <th class="border px-4 py-2">Nombre</th>
+                <th>Nombre</th>
+                <th class="text-center">Acciones</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($categorias as $categoria)
+            @forelse($categorias as $categoria)
                 <tr>
-                    <td class="border px-4 py-2">{{ $categoria->id }}</td>
-                    <td class="border px-4 py-2">{{ $categoria->nombre }}</td>
+                    <td>{{ $categoria->nombre }}</td>
+                    <td class="text-center d-flex justify-content-center gap-2">
+                        <a href="{{ route('categorias.edit', $categoria->id) }}" class="btn btn-warning btn-sm">Editar</a>
+
+                        <form action="{{ route('categorias.destroy', $categoria->id) }}" method="POST" onsubmit="return confirm('¿Deseas eliminar esta categoría?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                    </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="2" class="text-center">No hay categorías registradas.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 @endsection

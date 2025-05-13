@@ -53,9 +53,37 @@
             padding: 10px;
             border-bottom: 1px solid #eee;
         }
+        .navbar {
+            background-color: #343a40;
+            padding: 10px 25px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+        .navbar a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        .navbar a:hover {
+            color: #ffc107;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Barra de navegación -->
+    <div class="navbar">
+        <a href="{{ url('/productos') }}">Productos</a>
+        <a href="{{ url('/ventas') }}">Ventas</a>
+        <a href="{{ url('/clientes') }}">Clientes</a>
+        <a href="{{ url('/categorias') }}">Categorías</a>
+        <a href="{{ url('/estadisticas') }}">Estadísticas</a>
+        <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+            @csrf
+            <button type="submit" class="btn btn-sm btn-danger">Cerrar sesión</button>
+        </form>
+    </div>
+
     <div class="container">
         @yield('content')
     </div>

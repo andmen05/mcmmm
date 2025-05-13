@@ -31,4 +31,31 @@ class CategoriaController extends Controller
 
         return redirect()->route('categorias.index')->with('success', 'Categoría creada correctamente.');
     }
+
+    // Mostrar formulario para editar una categoría
+public function edit(Categoria $categoria)
+{
+    return view('categorias.edit', compact('categoria'));
+}
+
+// Actualizar una categoría existente
+public function update(Request $request, Categoria $categoria)
+{
+    $request->validate([
+        'nombre' => 'required|string|max:255|unique:categorias,nombre,' . $categoria->id,
+    ]);
+
+    $categoria->update($request->all());
+
+    return redirect()->route('categorias.index')->with('success', 'Categoría actualizada correctamente.');
+}
+
+// Eliminar una categoría
+public function destroy(Categoria $categoria)
+{
+    $categoria->delete();
+
+    return redirect()->route('categorias.index')->with('success', 'Categoría eliminada correctamente.');
+}
+
 }
