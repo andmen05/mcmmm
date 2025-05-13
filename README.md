@@ -63,6 +63,14 @@ DB_PASSWORD=
 
    php artisan serve
 
+
+   ## 📦 Base de Datos
+
+Puedes descargar la base de datos desde este repositorio:  
+👉 [Descargar mcmmm.sql](./mcmmm.sql)
+
+Luego impórtala en phpMyAdmin para tener los datos completos del sistema.
+
    
 👨‍💻 Autores
 Desarrollado por: andres mendez
