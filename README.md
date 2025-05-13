@@ -72,7 +72,7 @@ Puedes descargar la base de datos desde este repositorio:
 Luego impórtala en phpMyAdmin para tener los datos completos del sistema.
 
    
-👨‍💻 Autores
+ ## 👨‍💻 Autores
 Desarrollado por: andres mendez
 
 Universidad: FESC - Facultad de Ingeniería
