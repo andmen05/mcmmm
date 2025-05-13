@@ -79,7 +79,7 @@ Universidad: FESC - Facultad de Ingeniería
 
 Año: 2025
 
-📃 Licencia
+## 📃 Licencia
 Este proyecto es de uso académico. Puedes modificarlo libremente para uso educativo.
 
 
